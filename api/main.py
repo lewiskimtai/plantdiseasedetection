@@ -5,6 +5,7 @@ import numpy as np
 from io import BytesIO
 from PIL import Image
 import tensorflow as tf
+from keras.layers import TFSMLayer
 
 app = FastAPI()
 
@@ -22,7 +23,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-MODEL = tf.keras.models.load_model("../saved_models/1")
+# Load the model using TFSMLayer
+MODEL = TFSMLayer("../saved_models/1", call_endpoint='serving_default')
 
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
