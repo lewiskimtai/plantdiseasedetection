@@ -22,17 +22,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-def load_custom_model(model_path):
-    model = tf.keras.models.load_model(model_path, compile=False)
-    for layer in model.layers:
-        if hasattr(layer, 'losses'):
-            for loss in layer.losses:
-                if hasattr(loss, 'reduction') and loss.reduction == 'auto':
-                    loss.reduction = tf.keras.losses.Reduction.SUM_OVER_BATCH_SIZE
-    model.compile(optimizer=tf.keras.optimizers.Adam())
-    return model
-
-MODEL = load_custom_model("potatoes.h5")
+MODEL = tf.keras.models.load_model("../saved_models/1")
 
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
