@@ -5,7 +5,7 @@ import numpy as np
 from io import BytesIO
 from PIL import Image
 import tensorflow as tf
-from keras.layers import TFSMLayer
+import os
 
 app = FastAPI()
 
@@ -23,8 +23,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load the model using TFSMLayer
-MODEL = TFSMLayer("../saved_models/1", call_endpoint='serving_default')
+# Check if the H5 model already exists
+h5_model_path = "potatoes.h5"
+
+if not os.path.exists(h5_model_path):
+    # Load the existing SavedModel
+    model = tf.keras.models.load_model("../saved_models/1", compile=False)
+
+    # Save the model in H5 format
+    model.save(h5_model_path, save_format="h5")
+
+# Load the H5 model
+MODEL = tf.keras.models.load_model(h5_model_path)
 
 CLASS_NAMES = ["Early Blight", "Late Blight", "Healthy"]
 
@@ -55,6 +65,5 @@ async def predict(
     }
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host='0.0.0.0', port=port)
