@@ -11,6 +11,8 @@ app = FastAPI()
 origins = [
     "http://localhost",
     "http://localhost:3000",
+    "https://plantdiseasedetection-1-x5dz.onrender.com",
+    "https://plantdiseasedetection-48tl.onrender.com",
 ]
 app.add_middleware(
     CORSMiddleware,
